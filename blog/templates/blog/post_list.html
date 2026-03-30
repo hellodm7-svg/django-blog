@@ -1,0 +1,115 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    {% if current_category %}{{ current_category.name }} - {% endif %}
+    {% if current_tag %}#{{ current_tag.name }} - {% endif %}
+    My Blog
+{% endblock %}
+
+{% block content %}
+{% if not query and not current_category and not current_tag %}
+<div class="hero-section mb-5">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold mb-3"><i class="bi bi-journal-richtext me-2"></i>My Blog</h1>
+        <p class="lead mb-0">생각을 기록하는 공간</p>
+    </div>
+</div>
+{% endif %}
+
+<div class="container">
+    {% if current_category %}
+    <div class="mb-4">
+        <h3><i class="bi bi-folder2-open me-2 text-primary"></i>{{ current_category.name }}</h3>
+        <hr>
+    </div>
+    {% elif current_tag %}
+    <div class="mb-4">
+        <h3><i class="bi bi-tag me-2 text-success"></i>#{{ current_tag.name }}</h3>
+        <hr>
+    </div>
+    {% elif query %}
+    <div class="mb-4">
+        <h3><i class="bi bi-search me-2"></i>"{{ query }}" 검색 결과 ({{ posts|length }}건)</h3>
+        <hr>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-8">
+            {% if posts %}
+                <div class="row g-4">
+                    {% for post in posts %}
+                    <div class="col-md-6">
+                        <div class="card post-card shadow-sm h-100">
+                            {% if post.thumbnail %}
+                                <img src="{{ post.thumbnail.url }}" class="card-img-top post-thumbnail" alt="{{ post.title }}">
+                            {% else %}
+                                <div class="post-thumbnail-placeholder d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-journal-text text-white" style="font-size: 3rem; opacity: 0.5;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                {% if post.category %}
+                                <a href="{{ post.category.get_absolute_url }}" class="text-decoration-none">
+                                    <span class="badge bg-primary category-badge mb-2">{{ post.category.name }}</span>
+                                </a>
+                                {% endif %}
+                                <h5 class="card-title">
+                                    <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-dark">
+                                        {{ post.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted small flex-grow-1">
+                                    {{ post.content|truncatechars:80 }}
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-person me-1"></i>{{ post.author.username }}
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="bi bi-eye me-1"></i>{{ post.view_count }}
+                                        &nbsp;
+                                        <i class="bi bi-chat me-1"></i>{{ post.comments.count }}
+                                    </small>
+                                </div>
+                                <small class="text-muted mt-1">
+                                    <i class="bi bi-clock me-1"></i>{{ post.created_at|date:"Y.m.d" }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+                    <p class="text-muted mt-3">게시글이 없습니다.</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'blog:post_create' %}" class="btn btn-primary mt-2">
+                        <i class="bi bi-pencil-square me-1"></i>첫 글 작성하기
+                    </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card sidebar-card shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-folder2 me-2 text-primary"></i>카테고리
+                </div>
+                <div class="card-body">
+                    <a href="/" class="d-block text-decoration-none text-dark py-1 border-bottom">
+                        <i class="bi bi-grid me-2"></i>전체 <span class="badge bg-secondary float-end">{{ categories|length }}</span>
+                    </a>
+                    {% for cat in categories %}
+                    <a href="{{ cat.get_absolute_url }}" class="d-block text-decoration-none text-dark py-1 border-bottom">
+                        <i class="bi bi-folder me-2"></i>{{ cat.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

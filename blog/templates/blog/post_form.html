@@ -1,0 +1,73 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}게시글 {{ action }} - My Blog{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="bi bi-pencil-square me-2"></i>게시글 {{ action }}
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">제목</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">내용</label>
+                            {{ form.content }}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">카테고리</label>
+                                {{ form.category }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">썸네일</label>
+                                {{ form.thumbnail }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">태그</label>
+                            <div class="d-flex flex-wrap gap-2 mt-1">
+                                {% for checkbox in form.tags %}
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                {{ form.is_published }}
+                                <label class="form-check-label fw-bold" for="{{ form.is_published.id_for_label }}">
+                                    공개
+                                </label>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>{{ action }}하기
+                            </button>
+                            {% if post %}
+                            <a href="{{ post.get_absolute_url }}" class="btn btn-outline-secondary">취소</a>
+                            {% else %}
+                            <a href="/" class="btn btn-outline-secondary">취소</a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
