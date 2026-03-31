@@ -3,104 +3,97 @@
 {% block title %}{{ post.title }} - My Blog{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-5">
     <div class="row g-4">
         <div class="col-lg-8">
-
-            <article class="glass p-4 p-md-5 mb-4">
-                <div class="mb-3 d-flex flex-wrap gap-2">
+            <article class="card-clean p-4 p-md-5 mb-4">
+                <!-- 메타 상단 -->
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
                     {% if post.category %}
-                    <a href="{{ post.category.get_absolute_url }}" class="glass-btn" style="font-size:0.78rem; padding:4px 12px;">
-                        <i class="bi bi-folder me-1"></i>{{ post.category.name }}
+                    <a href="{{ post.category.get_absolute_url }}" class="post-cat" style="font-size:0.78rem;">
+                        {{ post.category.name }}
                     </a>
                     {% endif %}
                     {% for tag in post.tags.all %}
-                    <a href="{{ tag.get_absolute_url }}" class="glass-btn" style="font-size:0.78rem; padding:4px 12px; color:var(--accent);">
-                        #{{ tag.name }}
-                    </a>
+                    <a href="{{ tag.get_absolute_url }}" class="tag-badge">#{{ tag.name }}</a>
                     {% endfor %}
                 </div>
 
-                <h1 class="fw-bold mb-3" style="font-size:1.8rem; line-height:1.3;">{{ post.title }}</h1>
+                <h1 class="fw-800 mb-4" style="font-size:1.9rem; font-weight:800; letter-spacing:-0.5px; line-height:1.3; color:var(--text);">{{ post.title }}</h1>
 
-                <div class="d-flex align-items-center mb-4 gap-3" style="font-size:0.82rem; color:var(--text-muted);">
+                <div class="d-flex align-items-center gap-3 mb-4 pb-4" style="border-bottom:1px solid var(--border); font-size:0.82rem; color:var(--text-secondary);">
                     <span><i class="bi bi-person-circle me-1"></i>{{ post.author.username }}</span>
                     <span><i class="bi bi-clock me-1"></i>{{ post.created_at|date:"Y.m.d H:i" }}</span>
                     <span><i class="bi bi-eye me-1"></i>{{ post.view_count }}</span>
                 </div>
 
-                <hr style="border-color:var(--glass-border);">
-
-                <div class="post-content mt-4" style="line-height:1.9; font-size:1.02rem; color:rgba(255,255,255,0.9);">
-                    {{ post.content|linebreaks }}
+                <div class="post-content" style="line-height:1.85; font-size:1rem; color:var(--text);">
+                    {{ post.content|safe }}
                 </div>
 
                 {% if user == post.author %}
-                <hr style="border-color:var(--glass-border);">
-                <div class="d-flex gap-2">
-                    <a href="{% url 'blog:post_edit' post.pk %}" class="glass-btn">
-                        <i class="bi bi-pencil me-1"></i>수정
+                <div class="d-flex gap-2 mt-5 pt-4" style="border-top:1px solid var(--border);">
+                    <a href="{% url 'blog:post_edit' post.pk %}" class="btn-secondary-custom">
+                        <i class="bi bi-pencil"></i>수정
                     </a>
-                    <button type="button" class="glass-btn" style="color:#f87171;" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                        <i class="bi bi-trash me-1"></i>삭제
+                    <button type="button" class="btn-secondary-custom" style="color:#dc2626; border-color:#fecaca;" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i>삭제
                     </button>
                 </div>
                 {% endif %}
             </article>
 
             <!-- 댓글 -->
-            <div class="glass p-4 mb-4">
-                <div class="fw-bold mb-4" style="color:var(--accent);">
-                    <i class="bi bi-chat-dots me-2"></i>댓글 {{ comments|length }}개
-                </div>
+            <div class="card-clean p-4 mb-4">
+                <h6 class="fw-700 mb-4" style="font-weight:700; font-size:0.9rem; color:var(--text-secondary); letter-spacing:0.5px; text-transform:uppercase;">
+                    댓글 {{ comments|length }}개
+                </h6>
 
                 {% for comment in comments %}
-                <div style="padding:14px 0; border-bottom:1px solid var(--glass-border);">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span style="font-size:0.88rem; font-weight:600;">
-                            <i class="bi bi-person-circle me-1" style="color:var(--accent);"></i>{{ comment.author.username }}
-                            <small class="ms-2" style="color:var(--text-muted); font-weight:400;">{{ comment.created_at|date:"Y.m.d H:i" }}</small>
+                <div style="padding:14px 0; border-bottom:1px solid var(--border);">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span style="font-size:0.88rem; font-weight:600; color:var(--text);">
+                            {{ comment.author.username }}
+                            <span class="ms-2" style="font-weight:400; color:var(--text-secondary); font-size:0.8rem;">{{ comment.created_at|date:"Y.m.d H:i" }}</span>
                         </span>
                         {% if user == comment.author %}
                         <form method="post" action="{% url 'blog:comment_delete' post.pk comment.pk %}">
                             {% csrf_token %}
-                            <button type="submit" class="glass-btn" style="font-size:0.75rem; padding:3px 10px; color:#f87171;" onclick="return confirm('댓글을 삭제할까요?')">
+                            <button type="submit" class="btn-secondary-custom" style="padding:3px 10px; font-size:0.78rem; color:#dc2626; border-color:#fecaca;" onclick="return confirm('댓글을 삭제할까요?')">
                                 <i class="bi bi-x-lg"></i>
                             </button>
                         </form>
                         {% endif %}
                     </div>
-                    <p class="mb-0 mt-2" style="font-size:0.95rem; color:rgba(255,255,255,0.85);">{{ comment.content|linebreaks }}</p>
+                    <p class="mb-0" style="font-size:0.93rem; color:var(--text);">{{ comment.content }}</p>
                 </div>
                 {% empty %}
-                <p class="text-center py-3" style="color:var(--text-muted);">첫 댓글을 남겨보세요!</p>
+                <p class="text-center py-3" style="color:var(--text-secondary); font-size:0.9rem;">첫 댓글을 남겨보세요.</p>
                 {% endfor %}
 
                 {% if user.is_authenticated %}
                 <form method="post" action="{% url 'blog:comment_create' post.pk %}" class="mt-4">
                     {% csrf_token %}
-                    <textarea name="content" class="glass-input w-100 mb-3" rows="3" placeholder="댓글을 입력하세요..." style="resize:none;"></textarea>
-                    <button type="submit" class="glass-btn glass-btn-accent">
-                        <i class="bi bi-send me-1"></i>댓글 작성
+                    <textarea name="content" class="form-control mb-3" rows="3" placeholder="댓글을 입력하세요..." style="border-radius:8px; border-color:var(--border); font-size:0.9rem; resize:none;"></textarea>
+                    <button type="submit" class="btn-primary-custom">
+                        <i class="bi bi-send"></i>댓글 작성
                     </button>
                 </form>
                 {% else %}
-                <div class="text-center mt-4" style="color:var(--text-muted); font-size:0.9rem;">
+                <div class="text-center mt-4" style="color:var(--text-secondary); font-size:0.88rem;">
                     댓글을 작성하려면 <a href="{% url 'login' %}?next={{ request.path }}" style="color:var(--accent);">로그인</a>이 필요합니다.
                 </div>
                 {% endif %}
             </div>
 
-            <a href="/" class="glass-btn">
-                <i class="bi bi-arrow-left me-1"></i>목록으로
+            <a href="/" class="btn-secondary-custom">
+                <i class="bi bi-arrow-left"></i>목록으로
             </a>
         </div>
 
         <div class="col-lg-4">
-            <div class="glass p-3">
-                <div class="fw-bold mb-3" style="color:var(--accent); font-size:0.9rem; letter-spacing:0.5px; text-transform:uppercase;">
-                    <i class="bi bi-folder2 me-2"></i>카테고리
-                </div>
+            <div class="card-clean p-3">
+                <div class="sidebar-label mb-2">카테고리</div>
                 <a href="/" class="sidebar-item">
                     <i class="bi bi-grid me-2"></i>전체
                 </a>
@@ -113,18 +106,18 @@
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">게시글 삭제</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-header" style="border-bottom:1px solid var(--border);">
+                <h5 class="modal-title" style="font-size:1rem; font-weight:700;">게시글 삭제</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" style="color:var(--text-muted);">
+            <div class="modal-body" style="font-size:0.9rem; color:var(--text-secondary);">
                 <strong style="color:var(--text);">{{ post.title }}</strong> 게시글을 삭제할까요?<br>이 작업은 되돌릴 수 없습니다.
             </div>
-            <div class="modal-footer">
-                <button type="button" class="glass-btn" data-bs-dismiss="modal">취소</button>
+            <div class="modal-footer" style="border-top:1px solid var(--border);">
+                <button type="button" class="btn-secondary-custom" data-bs-dismiss="modal">취소</button>
                 <form method="post" action="{% url 'blog:post_delete' post.pk %}">
                     {% csrf_token %}
-                    <button type="submit" class="glass-btn" style="color:#f87171;">삭제</button>
+                    <button type="submit" class="btn-primary-custom" style="background:#dc2626;">삭제</button>
                 </form>
             </div>
         </div>

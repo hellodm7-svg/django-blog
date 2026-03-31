@@ -6,264 +6,312 @@
     <title>{% block title %}My Blog{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --glass-shadow: rgba(0, 0, 0, 0.2);
-            --text: #ffffff;
-            --text-muted: rgba(255,255,255,0.6);
-            --accent: #a78bfa;
-            --accent-hover: #c4b5fd;
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #1a202c;
+            --text-secondary: #64748b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #eff6ff;
         }
 
         * { box-sizing: border-box; }
 
         body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 70%, #1a1a4e 100%);
-            background-attachment: fixed;
+            background-color: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        /* 배경 장식 원 */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -150px;
-            right: -100px;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(167,139,250,0.25) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -100px;
-            left: -100px;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* 글래스 카드 */
-        .glass {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 8px 32px var(--glass-shadow);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         /* 네브바 */
         .navbar {
-            background: rgba(255,255,255,0.07) !important;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
+            background-color: var(--surface) !important;
+            border-bottom: 1px solid var(--border);
+            padding: 0;
             position: sticky;
             top: 0;
             z-index: 100;
         }
+        .navbar .container {
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
         .navbar-brand {
             font-weight: 800;
-            color: var(--accent) !important;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
+            color: var(--text) !important;
             letter-spacing: -0.5px;
         }
-        .nav-link { color: var(--text-muted) !important; transition: color 0.2s; }
-        .nav-link:hover { color: var(--text) !important; }
+        .navbar-brand span { color: var(--accent); }
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 6px 12px !important;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text) !important;
+            background: var(--bg);
+        }
 
         /* 버튼 */
-        .glass-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            color: var(--text);
-            padding: 6px 16px;
+        .btn-primary-custom {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
             text-decoration: none;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s;
-            display: inline-block;
-            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s;
+            cursor: pointer;
         }
-        .glass-btn:hover {
-            background: rgba(255,255,255,0.2);
+        .btn-primary-custom:hover {
+            background: var(--accent-hover);
+            color: white;
+        }
+        .btn-secondary-custom {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .btn-secondary-custom:hover {
+            background: var(--bg);
             color: var(--text);
-            transform: translateY(-1px);
+            border-color: #cbd5e1;
         }
-        .glass-btn-accent {
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            border-color: transparent;
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(124,58,237,0.4);
-        }
-        .glass-btn-accent:hover {
-            background: linear-gradient(135deg, #6d28d9, #4338ca);
-            color: #fff;
-            box-shadow: 0 6px 20px rgba(124,58,237,0.5);
+
+        /* 카드 */
+        .card-clean {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         /* 인풋 */
-        .glass-input {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
+        .input-clean {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             color: var(--text);
             padding: 7px 14px;
-            backdrop-filter: blur(8px);
-        }
-        .glass-input::placeholder { color: var(--text-muted); }
-        .glass-input:focus {
+            font-size: 0.88rem;
             outline: none;
-            border-color: var(--accent);
-            background: rgba(255,255,255,0.12);
-            color: var(--text);
+            transition: border-color 0.15s;
         }
+        .input-clean:focus {
+            border-color: var(--accent);
+            background: var(--surface);
+        }
+        .input-clean::placeholder { color: var(--text-secondary); }
 
-        /* 목차형 게시글 아이템 */
+        /* 목차형 게시글 */
         .post-item {
             display: flex;
             align-items: center;
             padding: 14px 20px;
-            border-radius: 12px;
+            border-bottom: 1px solid var(--border);
             text-decoration: none;
             color: var(--text);
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 10px;
-            transition: all 0.2s;
-            backdrop-filter: blur(8px);
+            transition: background 0.12s;
         }
+        .post-item:first-child { border-radius: 12px 12px 0 0; }
+        .post-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 12px 12px;
+        }
+        .post-item:only-child { border-radius: 12px; }
         .post-item:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: var(--accent);
+            background: var(--accent-light);
             color: var(--text);
-            transform: translateX(4px);
         }
-        .post-item .post-num {
-            font-size: 0.82rem;
-            color: var(--accent);
+        .post-item:hover .post-title { color: var(--accent); }
+        .post-num {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
             width: 32px;
             flex-shrink: 0;
             font-weight: 600;
         }
-        .post-item .post-title {
+        .post-title {
             flex-grow: 1;
+            font-size: 0.95rem;
             font-weight: 500;
-            font-size: 0.97rem;
+            color: var(--text);
+            transition: color 0.12s;
         }
-        .post-item .post-meta {
-            font-size: 0.76rem;
-            color: var(--text-muted);
+        .post-cat {
+            font-size: 0.72rem;
+            color: var(--accent);
+            background: var(--accent-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-weight: 600;
             white-space: nowrap;
-            margin-left: 12px;
+        }
+        .post-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            margin-left: 16px;
         }
 
         /* 히어로 */
         .hero-section {
-            padding: 60px 0 30px;
-            position: relative;
-            z-index: 1;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 48px 0 32px;
+        }
+        .hero-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
         }
         .hero-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ffffff 0%, #a78bfa 50%, #818cf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -1px;
+            line-height: 1.2;
         }
-        .hero-sub { color: var(--text-muted); }
+        .hero-sub {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 8px;
+        }
 
         /* 사이드바 */
         .sidebar-item {
-            display: block;
-            padding: 9px 14px;
-            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
             text-decoration: none;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-            transition: all 0.2s;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            transition: all 0.12s;
+            font-weight: 500;
         }
         .sidebar-item:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--text);
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .sidebar-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            padding: 0 12px;
+            margin-bottom: 6px;
         }
 
         /* 드롭다운 */
         .dropdown-menu {
-            background: rgba(30, 27, 75, 0.9) !important;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border) !important;
-            border-radius: 12px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+            padding: 6px !important;
         }
-        .dropdown-item { color: var(--text-muted) !important; }
+        .dropdown-item {
+            border-radius: 6px;
+            font-size: 0.88rem;
+            color: var(--text-secondary) !important;
+            padding: 8px 12px !important;
+        }
         .dropdown-item:hover {
-            background: rgba(255,255,255,0.1) !important;
+            background: var(--bg) !important;
             color: var(--text) !important;
         }
 
         footer {
-            background: rgba(0,0,0,0.2);
-            border-top: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            position: relative;
-            z-index: 1;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
         }
 
-        .container { position: relative; z-index: 1; }
+        /* 태그 */
+        .tag-badge {
+            font-size: 0.75rem;
+            background: var(--bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.12s;
+        }
+        .tag-badge:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: #bfdbfe;
+        }
 
         /* 모달 */
         .modal-content {
-            background: rgba(20, 17, 60, 0.95) !important;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border) !important;
-            border-radius: 16px !important;
-            color: var(--text);
-        }
-        .modal-header, .modal-footer {
-            border-color: var(--glass-border) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 14px !important;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.12) !important;
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg px-3">
+<nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="/"><i class="bi bi-journal-richtext me-2"></i>My Blog</a>
-        <button class="navbar-toggler glass-btn border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-            <i class="bi bi-list text-white"></i>
+        <a class="navbar-brand me-4" href="/"><span>My</span> Blog</a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" style="box-shadow:none;">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/">홈</a></li>
             </ul>
             <form class="d-flex me-3" method="get" action="/">
-                <input class="glass-input me-2" type="search" name="q" placeholder="검색..." value="{{ request.GET.q }}" style="width:180px;">
-                <button class="glass-btn" type="submit"><i class="bi bi-search"></i></button>
+                <input class="input-clean me-2" type="search" name="q" placeholder="검색..." value="{{ request.GET.q }}" style="width:180px;">
+                <button class="btn-secondary-custom" type="submit" style="padding:7px 12px;"><i class="bi bi-search"></i></button>
             </form>
-            <ul class="navbar-nav gap-2">
+            <div class="d-flex align-items-center gap-2">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="glass-btn glass-btn-accent" href="{% url 'blog:post_create' %}">
-                            <i class="bi bi-pencil-square me-1"></i>글쓰기
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="glass-btn dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle me-1"></i>{{ user.username }}
-                        </a>
+                    <a class="btn-primary-custom" href="{% url 'blog:post_create' %}">
+                        <i class="bi bi-pencil-square"></i>글쓰기
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn-secondary-custom dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>{{ user.username }}
+                        </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             {% if user.is_staff %}
                             <li><a class="dropdown-item" href="/admin"><i class="bi bi-gear me-2"></i>관리자 페이지</a></li>
-                            <li><hr class="dropdown-divider" style="border-color:var(--glass-border);"></li>
+                            <li><hr class="dropdown-divider mx-2"></li>
                             {% endif %}
                             <li>
                                 <form method="post" action="{% url 'logout' %}">
@@ -272,13 +320,11 @@
                                 </form>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="glass-btn" href="{% url 'login' %}">로그인</a>
-                    </li>
+                    <a class="btn-secondary-custom" href="{% url 'login' %}">로그인</a>
                 {% endif %}
-            </ul>
+            </div>
         </div>
     </div>
 </nav>
@@ -286,9 +332,9 @@
 {% if messages %}
 <div class="container mt-3">
     {% for message in messages %}
-    <div class="alert glass" style="color:var(--text); border-color:var(--accent);" role="alert">
-        <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="alert"></button>
+    <div class="alert alert-info alert-dismissible fade show" style="border-radius:10px; font-size:0.9rem;" role="alert">
         {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     {% endfor %}
 </div>
@@ -298,7 +344,7 @@
 
 <footer class="py-4 mt-5">
     <div class="container text-center">
-        <p class="mb-0" style="font-size:0.85rem;">&copy; 2026 My Blog · Django로 만들었습니다.</p>
+        <p class="mb-0" style="font-size:0.82rem;">&copy; 2026 My Blog · Django로 만들었습니다.</p>
     </div>
 </footer>
 
