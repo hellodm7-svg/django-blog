@@ -33,6 +33,9 @@ ALLOWED_HOSTS += [".onrender.com"]
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -128,3 +131,29 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+UNFOLD = {
+    "SITE_TITLE": "My Blog 관리자",
+    "SITE_HEADER": "My Blog",
+    "SITE_SUBHEADER": "블로그 관리 페이지",
+    "SITE_URL": "/",
+    "COLORS": {
+        "primary": {
+            "50": "238 233 255",
+            "100": "221 214 254",
+            "200": "196 181 253",
+            "300": "167 139 250",
+            "400": "139 92 246",
+            "500": "109 99 255",
+            "600": "124 58 237",
+            "700": "109 40 217",
+            "800": "91 33 182",
+            "900": "76 29 149",
+            "950": "46 16 101",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+    },
+}
