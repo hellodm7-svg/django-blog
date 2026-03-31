@@ -133,18 +133,30 @@ SUMMERNOTE_CONFIG = {
     'summernote': {
         'toolbar': [
             ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+            ['fontname', ['fontname']],
             ['fontsize', ['fontsize']],
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
             ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
+            ['insert', ['link', 'picture', 'video', 'hr']],
             ['view', ['fullscreen', 'codeview', 'help']],
         ],
-        'height': 400,
+        'height': 600,
+        'width': '100%',
         'lang': 'ko-KR',
+        'fontNames': [
+            '맑은 고딕', '나눔고딕', '돋움', '굴림',
+            'Arial', 'Arial Black', 'Comic Sans MS',
+            'Courier New', 'Georgia', 'Impact',
+            'Tahoma', 'Times New Roman', 'Verdana',
+        ],
+        'fontSizes': ['8','9','10','11','12','14','16','18','20','22','24','28','32','36','48','64','82'],
+        'styleTags': ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
     },
     'attachment_require_authentication': True,
+    'disable_attachment': False,
 }
 
 LOGIN_URL = "/accounts/login/"
