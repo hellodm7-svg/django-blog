@@ -8,15 +8,15 @@
 
 {% block content %}
 {% if not query and not current_category and not current_tag %}
-<div class="hero-section mb-4">
+<div class="hero-section mb-2">
     <div class="container text-center">
-        <h1 class="hero-title mb-2"><i class="bi bi-journal-richtext me-2"></i>My Blog</h1>
-        <p style="color:var(--text-muted);">생각을 기록하는 공간</p>
+        <h1 class="hero-title mb-3"><i class="bi bi-journal-richtext me-2"></i>My Blog</h1>
+        <p class="hero-sub">생각을 기록하는 공간</p>
     </div>
 </div>
 {% endif %}
 
-<div class="container">
+<div class="container pb-5">
     {% if current_category %}
     <div class="mb-4">
         <h4 style="color:var(--accent);"><i class="bi bi-folder2-open me-2"></i>{{ current_category.name }}</h4>
@@ -31,7 +31,7 @@
     </div>
     {% endif %}
 
-    <div class="row">
+    <div class="row g-4">
         <div class="col-lg-8">
             {% if posts %}
                 {% for post in posts %}
@@ -39,7 +39,7 @@
                     <span class="post-num">{{ forloop.counter }}.</span>
                     <span class="post-title">
                         {% if post.category %}
-                        <span style="font-size:0.75rem; color:var(--accent); margin-right:8px;">[{{ post.category.name }}]</span>
+                        <span style="font-size:0.75rem; color:var(--accent); margin-right:8px; opacity:0.8;">[{{ post.category.name }}]</span>
                         {% endif %}
                         {{ post.title }}
                     </span>
@@ -53,11 +53,11 @@
                 </a>
                 {% endfor %}
             {% else %}
-                <div class="text-center py-5">
-                    <i class="bi bi-inbox" style="font-size:4rem; color:var(--text-muted);"></i>
+                <div class="glass text-center py-5">
+                    <i class="bi bi-inbox" style="font-size:3.5rem; color:var(--text-muted);"></i>
                     <p style="color:var(--text-muted);" class="mt-3">게시글이 없습니다.</p>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'blog:post_create' %}" class="neu-btn neu-btn-accent mt-2">
+                    <a href="{% url 'blog:post_create' %}" class="glass-btn glass-btn-accent mt-2">
                         <i class="bi bi-pencil-square me-1"></i>첫 글 작성하기
                     </a>
                     {% endif %}
@@ -65,14 +65,14 @@
             {% endif %}
         </div>
 
-        <div class="col-lg-4 mt-4 mt-lg-0">
-            <div class="neu-card p-3 mb-4">
-                <div class="fw-bold mb-3" style="color:var(--accent);">
+        <div class="col-lg-4">
+            <div class="glass p-3">
+                <div class="fw-bold mb-3" style="color:var(--accent); font-size:0.9rem; letter-spacing:0.5px; text-transform:uppercase;">
                     <i class="bi bi-folder2 me-2"></i>카테고리
                 </div>
                 <a href="/" class="sidebar-item">
                     <i class="bi bi-grid me-2"></i>전체
-                    <span class="float-end" style="color:var(--text-muted);">{{ categories|length }}</span>
+                    <span class="float-end" style="color:var(--accent); font-size:0.8rem;">{{ categories|length }}</span>
                 </a>
                 {% for cat in categories %}
                 <a href="{{ cat.get_absolute_url }}" class="sidebar-item">
