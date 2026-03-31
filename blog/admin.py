@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
 from .models import Post, Category, Tag, Comment
 
 
@@ -15,11 +16,11 @@ class TagAdmin(admin.ModelAdmin):
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(SummernoteModelAdmin):
+    summernote_fields = ('content',)
     list_display = ['title', 'author', 'category', 'is_published', 'view_count', 'created_at']
     list_filter = ['is_published', 'category', 'created_at']
     search_fields = ['title', 'content']
-    prepopulated_fields = {}
     raw_id_fields = ['author']
     date_hierarchy = 'created_at'
     ordering = ['-created_at']

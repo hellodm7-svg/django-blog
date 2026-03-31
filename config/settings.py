@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "unfold.contrib.filters",
     "unfold.contrib.forms",
     "django.contrib.admin",
+    "django_summernote",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
