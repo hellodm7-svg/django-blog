@@ -54,6 +54,39 @@ class Post(models.Model):
         return reverse('blog:post_detail', kwargs={'pk': self.pk})
 
 
+class SiteSettings(models.Model):
+    THEME_CHOICES = [
+        ('dark',      '🌑 다크 (GitHub Dark)'),
+        ('light',     '☀️ 라이트 모던'),
+        ('magazine',  '📰 매거진 (신문 스타일)'),
+        ('minimal',   '⬜ 미니멀 화이트'),
+    ]
+    theme = models.CharField(
+        max_length=20,
+        choices=THEME_CHOICES,
+        default='dark',
+        verbose_name='블로그 테마'
+    )
+    blog_title = models.CharField(max_length=100, default='My Blog', verbose_name='블로그 제목')
+    blog_description = models.CharField(max_length=200, default='생각을 기록하는 공간', verbose_name='블로그 설명')
+
+    class Meta:
+        verbose_name = '사이트 설정'
+        verbose_name_plural = '사이트 설정'
+
+    def __str__(self):
+        return f'사이트 설정 (테마: {self.get_theme_display()})'
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_settings(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='게시글')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='작성자')

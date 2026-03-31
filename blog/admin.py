@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
-from .models import Post, Category, Tag, Comment
+from .models import Post, Category, Tag, Comment, SiteSettings
 
 
 @admin.register(Category)
@@ -31,3 +31,22 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['author', 'post', 'created_at']
     list_filter = ['created_at']
     search_fields = ['content']
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('🎨 테마 설정', {
+            'fields': ('theme',),
+            'description': '블로그 전체 테마를 선택하세요. 저장 즉시 적용됩니다.',
+        }),
+        ('📝 블로그 정보', {
+            'fields': ('blog_title', 'blog_description'),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
