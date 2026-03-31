@@ -78,13 +78,19 @@ class SiteSettings(models.Model):
         return f'사이트 설정 (테마: {self.get_theme_display()})'
 
     def save(self, *args, **kwargs):
+        from django.core.cache import cache
         self.pk = 1
+        cache.delete('site_settings')
         super().save(*args, **kwargs)
 
     @classmethod
     def get_settings(cls):
-        obj, _ = cls.objects.get_or_create(pk=1)
-        return obj
+        from django.core.cache import cache
+        settings = cache.get('site_settings')
+        if settings is None:
+            settings, _ = cls.objects.get_or_create(pk=1)
+            cache.set('site_settings', settings, 60 * 10)
+        return settings
 
 
 class Comment(models.Model):
