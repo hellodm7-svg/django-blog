@@ -149,18 +149,19 @@ Cursor에서 수정 → git push → 깃허브 업데이트
 ■ 블로그:
 - 주소: https://django-blog-16zr.onrender.com
 - 관리자 페이지: https://django-blog-16zr.onrender.com/admin
-- 관리자 계정: 아직 미생성 (다음 작업)
+- 로그인 페이지: https://django-blog-16zr.onrender.com/accounts/login/
+- 관리자 아이디: admin
+- 관리자 비밀번호: admin1234
 
 ====================================================
  다음에 할 일
 ====================================================
 
-1. Render Shell에서 관리자 계정 생성
-   → Render 대시보드 → "Connect" → "Shell" 클릭
-   → python manage.py createsuperuser 실행
-   → 아이디/비밀번호 설정
+1. Render 재배포 완료 후 블로그 로그인 테스트
+   → https://django-blog-16zr.onrender.com/accounts/login/
+   → 아이디: admin / 비밀번호: admin1234
 
-2. 블로그 로그인 후 글쓰기 테스트
+2. 로그인 후 글쓰기 테스트
 
 3. (선택) 회원가입 기능 추가
 
