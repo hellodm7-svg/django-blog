@@ -27,3 +27,6 @@ staticfiles/
 # OS
 .DS_Store
 Thumbs.db
+
+# 대화기록 및 개인 파일
+*.txt
