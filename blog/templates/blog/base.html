@@ -9,14 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f5f7fa;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text: #1a202c;
-            --text-secondary: #64748b;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-light: #eff6ff;
+            --bg:        #0d1117;
+            --surface:   #161b22;
+            --surface2:  #21262d;
+            --border:    #30363d;
+            --text:      #e6edf3;
+            --text-sub:  #8b949e;
+            --accent:    #58a6ff;
+            --accent-bg: rgba(88,166,255,0.1);
+            --danger:    #f85149;
         }
 
         * { box-sizing: border-box; }
@@ -24,294 +25,303 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            font-size: 15px;
+            font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+            font-size: 14px;
             line-height: 1.6;
         }
 
+        /* 스크롤바 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
         /* 네브바 */
         .navbar {
-            background-color: var(--surface) !important;
+            background-color: rgba(13,17,23,0.95) !important;
             border-bottom: 1px solid var(--border);
-            padding: 0;
+            backdrop-filter: blur(8px);
             position: sticky;
             top: 0;
             z-index: 100;
+            padding: 0;
         }
-        .navbar .container {
-            height: 60px;
+        .navbar .container { height: 58px; }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text) !important;
+            letter-spacing: -0.3px;
             display: flex;
             align-items: center;
+            gap: 8px;
         }
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.15rem;
-            color: var(--text) !important;
-            letter-spacing: -0.5px;
+        .navbar-brand .brand-dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
         }
-        .navbar-brand span { color: var(--accent); }
         .nav-link {
-            color: var(--text-secondary) !important;
-            font-size: 0.88rem;
+            color: var(--text-sub) !important;
+            font-size: 0.85rem;
             font-weight: 500;
-            padding: 6px 12px !important;
+            padding: 5px 10px !important;
             border-radius: 6px;
             transition: all 0.15s;
         }
         .nav-link:hover {
             color: var(--text) !important;
-            background: var(--bg);
+            background: var(--surface2);
         }
 
         /* 버튼 */
-        .btn-primary-custom {
+        .btn-p {
             background: var(--accent);
-            color: white;
+            color: #0d1117;
             border: none;
-            border-radius: 8px;
-            padding: 7px 16px;
-            font-size: 0.88rem;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
             font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: background 0.15s;
+            gap: 5px;
+            transition: opacity 0.15s;
             cursor: pointer;
         }
-        .btn-primary-custom:hover {
-            background: var(--accent-hover);
-            color: white;
-        }
-        .btn-secondary-custom {
-            background: transparent;
-            color: var(--text-secondary);
+        .btn-p:hover { opacity: 0.85; color: #0d1117; }
+        .btn-s {
+            background: var(--surface2);
+            color: var(--text-sub);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 7px 16px;
-            font-size: 0.88rem;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
             font-weight: 500;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             transition: all 0.15s;
             cursor: pointer;
         }
-        .btn-secondary-custom:hover {
-            background: var(--bg);
+        .btn-s:hover {
+            background: var(--surface);
             color: var(--text);
-            border-color: #cbd5e1;
+            border-color: var(--text-sub);
         }
 
         /* 카드 */
-        .card-clean {
+        .card-d {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
         }
 
         /* 인풋 */
-        .input-clean {
-            background: var(--bg);
+        .inp {
+            background: var(--surface2);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--text);
-            padding: 7px 14px;
-            font-size: 0.88rem;
+            padding: 6px 12px;
+            font-size: 0.82rem;
             outline: none;
             transition: border-color 0.15s;
         }
-        .input-clean:focus {
-            border-color: var(--accent);
-            background: var(--surface);
-        }
-        .input-clean::placeholder { color: var(--text-secondary); }
+        .inp:focus { border-color: var(--accent); }
+        .inp::placeholder { color: var(--text-sub); }
 
-        /* 목차형 게시글 */
+        /* 게시글 아이템 */
         .post-item {
             display: flex;
             align-items: center;
-            padding: 14px 20px;
+            padding: 12px 18px;
             border-bottom: 1px solid var(--border);
             text-decoration: none;
             color: var(--text);
-            transition: background 0.12s;
+            transition: background 0.1s;
         }
-        .post-item:first-child { border-radius: 12px 12px 0 0; }
-        .post-item:last-child {
-            border-bottom: none;
-            border-radius: 0 0 12px 12px;
-        }
-        .post-item:only-child { border-radius: 12px; }
-        .post-item:hover {
-            background: var(--accent-light);
-            color: var(--text);
-        }
-        .post-item:hover .post-title { color: var(--accent); }
+        .post-item:last-child { border-bottom: none; }
+        .post-item:hover { background: var(--surface2); }
+        .post-item:hover .post-title-text { color: var(--accent); }
         .post-num {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            width: 32px;
-            flex-shrink: 0;
-            font-weight: 600;
-        }
-        .post-title {
-            flex-grow: 1;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text);
-            transition: color 0.12s;
-        }
-        .post-cat {
-            font-size: 0.72rem;
-            color: var(--accent);
-            background: var(--accent-light);
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-right: 10px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .post-meta {
             font-size: 0.75rem;
-            color: var(--text-secondary);
+            color: var(--text-sub);
+            width: 28px;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+        .post-title-text {
+            flex-grow: 1;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.1s;
+        }
+        .post-cat-badge {
+            font-size: 0.7rem;
+            background: var(--accent-bg);
+            color: var(--accent);
+            border: 1px solid rgba(88,166,255,0.2);
+            border-radius: 4px;
+            padding: 1px 7px;
+            margin-right: 8px;
             white-space: nowrap;
-            margin-left: 16px;
+            font-weight: 600;
+        }
+        .post-meta-text {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            white-space: nowrap;
+            margin-left: 14px;
         }
 
         /* 히어로 */
         .hero-section {
-            background: var(--surface);
             border-bottom: 1px solid var(--border);
             padding: 48px 0 32px;
+            background: var(--bg);
         }
-        .hero-label {
-            font-size: 0.75rem;
+        .hero-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .hero-desc { color: var(--text-sub); margin-top: 8px; font-size: 0.9rem; }
+
+        /* 사이드바 */
+        .sidebar-head {
+            font-size: 0.68rem;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 10px;
+            color: var(--text-sub);
+            padding: 0 10px;
+            margin-bottom: 6px;
         }
-        .hero-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--text);
-            letter-spacing: -1px;
-            line-height: 1.2;
-        }
-        .hero-sub {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 8px;
-        }
-
-        /* 사이드바 */
-        .sidebar-item {
+        .sidebar-link {
             display: flex;
             align-items: center;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
             text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.88rem;
-            transition: all 0.12s;
-            font-weight: 500;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+            transition: all 0.1s;
         }
-        .sidebar-item:hover {
-            background: var(--accent-light);
-            color: var(--accent);
+        .sidebar-link:hover {
+            background: var(--surface2);
+            color: var(--text);
         }
-        .sidebar-label {
+
+        /* 태그 */
+        .tag-pill {
             font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            padding: 0 12px;
-            margin-bottom: 6px;
+            background: var(--surface2);
+            color: var(--text-sub);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 8px;
+            text-decoration: none;
+            transition: all 0.1s;
+        }
+        .tag-pill:hover {
+            background: var(--accent-bg);
+            color: var(--accent);
+            border-color: rgba(88,166,255,0.3);
         }
 
         /* 드롭다운 */
         .dropdown-menu {
+            background: var(--surface) !important;
             border: 1px solid var(--border) !important;
-            border-radius: 10px !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
             padding: 6px !important;
         }
         .dropdown-item {
-            border-radius: 6px;
-            font-size: 0.88rem;
-            color: var(--text-secondary) !important;
-            padding: 8px 12px !important;
+            color: var(--text-sub) !important;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            padding: 7px 12px !important;
         }
         .dropdown-item:hover {
-            background: var(--bg) !important;
+            background: var(--surface2) !important;
             color: var(--text) !important;
-        }
-
-        footer {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        /* 태그 */
-        .tag-badge {
-            font-size: 0.75rem;
-            background: var(--bg);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 3px 10px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.12s;
-        }
-        .tag-badge:hover {
-            background: var(--accent-light);
-            color: var(--accent);
-            border-color: #bfdbfe;
         }
 
         /* 모달 */
         .modal-content {
+            background: var(--surface) !important;
             border: 1px solid var(--border) !important;
-            border-radius: 14px !important;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.12) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5) !important;
+            color: var(--text);
         }
+        .modal-header, .modal-footer { border-color: var(--border) !important; }
+        .btn-close-white { filter: invert(1) grayscale(1); }
+
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            color: var(--text-sub);
+        }
+
+        /* 폼 요소 다크 오버라이드 */
+        .form-control, .form-select {
+            background: var(--surface2) !important;
+            border-color: var(--border) !important;
+            color: var(--text) !important;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 3px rgba(88,166,255,0.1) !important;
+        }
+        .form-check-input { background-color: var(--surface2); border-color: var(--border); }
+        .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+        .form-check-label { color: var(--text-sub); }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand me-4" href="/"><span>My</span> Blog</a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" style="box-shadow:none;">
-            <span class="navbar-toggler-icon"></span>
+        <a class="navbar-brand me-4" href="/"><span class="brand-dot"></span>My Blog</a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" style="box-shadow:none; color:var(--text-sub);">
+            <i class="bi bi-list" style="font-size:1.2rem;"></i>
         </button>
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/">홈</a></li>
             </ul>
             <form class="d-flex me-3" method="get" action="/">
-                <input class="input-clean me-2" type="search" name="q" placeholder="검색..." value="{{ request.GET.q }}" style="width:180px;">
-                <button class="btn-secondary-custom" type="submit" style="padding:7px 12px;"><i class="bi bi-search"></i></button>
+                <input class="inp me-2" type="search" name="q" placeholder="검색..." value="{{ request.GET.q }}" style="width:170px;">
+                <button class="btn-s" type="submit" style="padding:6px 10px;"><i class="bi bi-search" style="font-size:0.8rem;"></i></button>
             </form>
             <div class="d-flex align-items-center gap-2">
                 {% if user.is_authenticated %}
-                    <a class="btn-primary-custom" href="{% url 'blog:post_create' %}">
+                    <a class="btn-p" href="{% url 'blog:post_create' %}">
                         <i class="bi bi-pencil-square"></i>글쓰기
                     </a>
                     <div class="dropdown">
-                        <button class="btn-secondary-custom dropdown-toggle" data-bs-toggle="dropdown">
+                        <button class="btn-s dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle"></i>{{ user.username }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             {% if user.is_staff %}
                             <li><a class="dropdown-item" href="/admin"><i class="bi bi-gear me-2"></i>관리자 페이지</a></li>
-                            <li><hr class="dropdown-divider mx-2"></li>
+                            <li><hr class="dropdown-divider" style="border-color:var(--border);"></li>
                             {% endif %}
                             <li>
                                 <form method="post" action="{% url 'logout' %}">
@@ -322,7 +332,7 @@
                         </ul>
                     </div>
                 {% else %}
-                    <a class="btn-secondary-custom" href="{% url 'login' %}">로그인</a>
+                    <a class="btn-s" href="{% url 'login' %}">로그인</a>
                 {% endif %}
             </div>
         </div>
@@ -332,9 +342,9 @@
 {% if messages %}
 <div class="container mt-3">
     {% for message in messages %}
-    <div class="alert alert-info alert-dismissible fade show" style="border-radius:10px; font-size:0.9rem;" role="alert">
+    <div class="alert" style="background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:0.88rem;" role="alert">
+        <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="alert" style="font-size:0.7rem;"></button>
         {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     {% endfor %}
 </div>
@@ -344,7 +354,7 @@
 
 <footer class="py-4 mt-5">
     <div class="container text-center">
-        <p class="mb-0" style="font-size:0.82rem;">&copy; 2026 My Blog · Django로 만들었습니다.</p>
+        <p class="mb-0" style="font-size:0.78rem;">&copy; 2026 My Blog &nbsp;·&nbsp; Django로 만들었습니다.</p>
     </div>
 </footer>
 

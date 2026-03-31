@@ -3,84 +3,74 @@
 {% block title %}게시글 {{ action }} - My Blog{% endblock %}
 
 {% block content %}
-<div style="background:var(--surface); border-bottom:1px solid var(--border); padding: 14px 0; position:sticky; top:60px; z-index:50;">
+<!-- 상단 고정 액션바 -->
+<div style="background:rgba(13,17,23,0.95); border-bottom:1px solid var(--border); backdrop-filter:blur(8px); padding:10px 0; position:sticky; top:58px; z-index:50;">
     <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
-        <span style="font-size:0.95rem; font-weight:700; color:var(--text);">
+        <span style="font-size:0.85rem; font-weight:600; color:var(--text-sub);">
             <i class="bi bi-pencil-square me-2" style="color:var(--accent);"></i>게시글 {{ action }}
         </span>
         <div class="d-flex gap-2">
-            <button type="submit" form="post-form" class="btn-primary-custom">
+            <button type="submit" form="post-form" class="btn-p">
                 <i class="bi bi-check-lg"></i>{{ action }}하기
             </button>
             {% if post %}
-            <a href="{{ post.get_absolute_url }}" class="btn-secondary-custom">취소</a>
+            <a href="{{ post.get_absolute_url }}" class="btn-s">취소</a>
             {% else %}
-            <a href="/" class="btn-secondary-custom">취소</a>
+            <a href="/" class="btn-s">취소</a>
             {% endif %}
         </div>
     </div>
 </div>
 
-<div style="background:var(--bg); min-height:calc(100vh - 120px);">
+<div style="background:var(--bg); min-height:calc(100vh - 116px); padding-bottom:40px;">
     <form id="post-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="container-fluid px-4 py-4">
+        <div class="container-fluid px-4 pt-4">
 
             <!-- 제목 -->
-            <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 24px; margin-bottom:16px;">
+            <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 22px; margin-bottom:14px;">
                 <input type="text" name="title" value="{{ form.title.value|default:'' }}"
                     placeholder="제목을 입력하세요"
-                    style="width:100%; border:none; outline:none; font-size:1.6rem; font-weight:700; color:var(--text); background:transparent; font-family:'Inter','Segoe UI',sans-serif; letter-spacing:-0.5px;"
-                    {% if form.title.value %}{% endif %}>
+                    style="width:100%; border:none; outline:none; font-size:1.5rem; font-weight:700; color:var(--text); background:transparent; font-family:'Inter','Segoe UI',sans-serif; letter-spacing:-0.5px;">
             </div>
 
             <div class="row g-3">
-                <!-- 에디터 (왼쪽 넓게) -->
+                <!-- 에디터 -->
                 <div class="col-lg-9">
-                    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+                    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;">
                         {{ form.content }}
                     </div>
                 </div>
 
-                <!-- 옵션 패널 (오른쪽) -->
+                <!-- 옵션 패널 -->
                 <div class="col-lg-3">
-
-                    <!-- 공개 설정 -->
-                    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:12px;">
-                        <div class="sidebar-label mb-2">공개 설정</div>
+                    <div class="card-d p-3 mb-3">
+                        <div class="sidebar-head mb-2">공개 설정</div>
                         <div class="form-check">
                             {{ form.is_published }}
-                            <label class="form-check-label" for="{{ form.is_published.id_for_label }}" style="font-size:0.88rem; color:var(--text-secondary);">
-                                공개로 발행
-                            </label>
+                            <label class="form-check-label" for="{{ form.is_published.id_for_label }}">공개로 발행</label>
                         </div>
                     </div>
 
-                    <!-- 카테고리 -->
-                    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:12px;">
-                        <div class="sidebar-label mb-2">카테고리</div>
+                    <div class="card-d p-3 mb-3">
+                        <div class="sidebar-head mb-2">카테고리</div>
                         {{ form.category }}
                     </div>
 
-                    <!-- 태그 -->
-                    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:12px;">
-                        <div class="sidebar-label mb-2">태그</div>
+                    <div class="card-d p-3 mb-3">
+                        <div class="sidebar-head mb-2">태그</div>
                         {% for checkbox in form.tags %}
                         <div class="form-check mb-1">
                             {{ checkbox.tag }}
-                            <label class="form-check-label" for="{{ checkbox.id_for_label }}" style="font-size:0.85rem; color:var(--text-secondary);">
-                                {{ checkbox.choice_label }}
-                            </label>
+                            <label class="form-check-label" for="{{ checkbox.id_for_label }}" style="font-size:0.82rem;">{{ checkbox.choice_label }}</label>
                         </div>
                         {% endfor %}
                     </div>
 
-                    <!-- 썸네일 -->
-                    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px;">
-                        <div class="sidebar-label mb-2">썸네일</div>
+                    <div class="card-d p-3">
+                        <div class="sidebar-head mb-2">썸네일</div>
                         {{ form.thumbnail }}
                     </div>
-
                 </div>
             </div>
         </div>
@@ -91,11 +81,32 @@
 {% block extra_js %}
 {{ form.media }}
 <style>
-    /* 에디터 테두리 제거 */
     .note-editor { border: none !important; }
-    .note-toolbar { border-bottom: 1px solid var(--border) !important; background: #fafafa !important; padding: 8px !important; }
-    .note-editing-area .note-editable { padding: 24px 28px !important; font-size: 1rem !important; line-height: 1.8 !important; min-height: 600px; }
-    /* 제목 placeholder */
-    input[placeholder="제목을 입력하세요"]::placeholder { color: #cbd5e1; }
+    .note-toolbar {
+        border-bottom: 1px solid var(--border) !important;
+        background: #1c2128 !important;
+        padding: 8px !important;
+    }
+    .note-toolbar .note-btn {
+        background: transparent !important;
+        border-color: var(--border) !important;
+        color: var(--text-sub) !important;
+    }
+    .note-toolbar .note-btn:hover {
+        background: var(--surface2) !important;
+        color: var(--text) !important;
+    }
+    .note-editing-area .note-editable {
+        background: var(--surface) !important;
+        color: var(--text) !important;
+        padding: 24px 28px !important;
+        font-size: 0.95rem !important;
+        line-height: 1.85 !important;
+        min-height: 600px;
+        caret-color: var(--accent);
+    }
+    .note-statusbar { background: var(--surface2) !important; border-top: 1px solid var(--border) !important; }
+    .note-placeholder { color: var(--text-sub) !important; }
+    input[placeholder="제목을 입력하세요"]::placeholder { color: var(--border); }
 </style>
 {% endblock %}
