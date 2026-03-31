@@ -28,7 +28,11 @@
                 </div>
 
                 <div class="post-content" style="line-height:1.85; font-size:1rem; color:var(--text);">
-                    {{ post.content|safe }}
+                    {% if '</p>' in post.content or '<br' in post.content or '<h' in post.content %}
+                        {{ post.content|safe }}
+                    {% else %}
+                        {{ post.content|linebreaks }}
+                    {% endif %}
                 </div>
 
                 {% if user == post.author %}
