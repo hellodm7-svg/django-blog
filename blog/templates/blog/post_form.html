@@ -3,6 +3,69 @@
 {% block title %}게시글 {{ action }} - My Blog{% endblock %}
 
 {% block content %}
+{% if use_simple_editor %}
+{# ===== 모바일: 삼성 메모장 스타일 ===== #}
+<div class="memo-app">
+    <form id="post-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- 상단 바 -->
+        <div class="memo-topbar">
+            {% if post %}
+            <a href="{{ post.get_absolute_url }}" class="memo-back"><i class="bi bi-chevron-left"></i></a>
+            {% else %}
+            <a href="/" class="memo-back"><i class="bi bi-chevron-left"></i></a>
+            {% endif %}
+            <div class="memo-topbar-actions">
+                <button type="button" onclick="document.getElementById('real-submit').click();" class="memo-save-btn">
+                    <i class="bi bi-check2"></i> 저장
+                </button>
+                <button type="button" class="memo-toggle-options" onclick="document.getElementById('memo-options').classList.toggle('memo-options-open')">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 제목 -->
+        <input type="text" name="title" value="{{ form.title.value|default:'' }}"
+            placeholder="제목" required class="memo-title">
+        {% if form.title.errors %}
+        <p style="color:#f85149; font-size:0.8rem; padding:0 24px;">{{ form.title.errors.0 }}</p>
+        {% endif %}
+
+        <!-- 본문 -->
+        {{ form.content }}
+
+        <!-- 옵션 (접혀있음, 점 세개 누르면 열림) -->
+        <div id="memo-options" class="memo-options-panel">
+            <div class="memo-opt-row">
+                <span class="memo-opt-label">공개</span>
+                {{ form.is_published }}
+            </div>
+            <div class="memo-opt-row">
+                <span class="memo-opt-label">카테고리</span>
+                {{ form.category }}
+            </div>
+            <div class="memo-opt-row">
+                <span class="memo-opt-label">태그</span>
+                <div class="memo-tags-wrap">
+                    {% for checkbox in form.tags %}
+                    <label class="memo-tag-chip">{{ checkbox.tag }} {{ checkbox.choice_label }}</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="memo-opt-row">
+                <span class="memo-opt-label">썸네일</span>
+                {{ form.thumbnail }}
+            </div>
+        </div>
+
+        <button type="submit" id="real-submit" style="display:none;"></button>
+    </form>
+</div>
+
+{% else %}
+{# ===== 데스크톱: 기존 에디터 ===== #}
 <!-- 상단 고정 액션바 -->
 <div style="background:rgba(13,17,23,0.95); border-bottom:1px solid var(--border); backdrop-filter:blur(8px); padding:10px 0; position:sticky; top:58px; z-index:50;">
     <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
@@ -80,9 +143,182 @@
         <button type="submit" id="real-submit" style="display:none;"></button>
     </form>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
+{% if use_simple_editor %}
+<style>
+    .memo-app {
+        background: #1c1c1e;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .memo-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: #1c1c1e;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .memo-back {
+        color: #8e8e93;
+        font-size: 1.4rem;
+        text-decoration: none;
+        padding: 6px;
+    }
+    .memo-topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .memo-save-btn {
+        background: #ffd60a;
+        color: #1c1c1e;
+        border: none;
+        border-radius: 20px;
+        padding: 7px 18px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+    .memo-save-btn:active { opacity: 0.7; }
+    .memo-toggle-options {
+        background: none;
+        border: none;
+        color: #8e8e93;
+        font-size: 1.3rem;
+        padding: 6px;
+        cursor: pointer;
+    }
+    .memo-title {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #e5e5e7;
+        font-size: 1.45rem;
+        font-weight: 700;
+        padding: 16px 24px 4px;
+        font-family: -apple-system, 'Segoe UI', sans-serif;
+        letter-spacing: -0.3px;
+    }
+    .memo-title::placeholder { color: #48484a; }
+    .memo-editor {
+        flex: 1;
+        width: 100%;
+        border: none !important;
+        outline: none !important;
+        background: transparent !important;
+        color: #e5e5e7 !important;
+        font-size: 1.05rem !important;
+        line-height: 1.9 !important;
+        padding: 12px 24px 40px !important;
+        min-height: 75vh;
+        resize: none;
+        font-family: -apple-system, 'Segoe UI', sans-serif;
+        box-shadow: none !important;
+    }
+    .memo-editor::placeholder { color: #48484a; }
+    .memo-editor:focus { box-shadow: none !important; border: none !important; }
+
+    /* 옵션 패널 (기본 숨김) */
+    .memo-options-panel {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        background: #2c2c2e;
+        border-radius: 14px;
+        margin: 0 16px;
+        padding: 0 16px;
+    }
+    .memo-options-panel.memo-options-open {
+        max-height: 500px;
+        padding: 14px 16px;
+    }
+    .memo-opt-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #3a3a3c;
+    }
+    .memo-opt-row:last-child { border-bottom: none; }
+    .memo-opt-label {
+        color: #e5e5e7;
+        font-size: 0.88rem;
+        font-weight: 500;
+        white-space: nowrap;
+        margin-right: 12px;
+    }
+    .memo-opt-row select,
+    .memo-opt-row input[type="file"] {
+        background: #3a3a3c !important;
+        border: none !important;
+        color: #e5e5e7 !important;
+        border-radius: 8px;
+        font-size: 0.84rem;
+        padding: 6px 10px;
+        max-width: 180px;
+    }
+    .memo-tags-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .memo-tag-chip {
+        font-size: 0.78rem;
+        color: #e5e5e7;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+</style>
+<script>
+(function () {
+    const form = document.getElementById('post-form');
+    const titleInput = form ? form.querySelector('input[name="title"]') : null;
+    const contentInput = form ? form.querySelector('textarea[name="content"]') : null;
+    if (!form || !titleInput || !contentInput) return;
+
+    const isEdit = "{{ post.id|default:'' }}" !== "";
+    const draftKey = isEdit ? `post-draft-edit-{{ post.id|default:'new' }}` : "post-draft-create";
+
+    try {
+        const raw = localStorage.getItem(draftKey);
+        if (raw) {
+            const draft = JSON.parse(raw);
+            if (!titleInput.value && draft.title) titleInput.value = draft.title;
+            if (!contentInput.value && draft.content) contentInput.value = draft.content;
+        }
+    } catch (e) {}
+
+    const saveDraft = () => {
+        try {
+            localStorage.setItem(draftKey, JSON.stringify({
+                title: titleInput.value || "",
+                content: contentInput.value || "",
+                savedAt: new Date().toISOString()
+            }));
+        } catch (e) {}
+    };
+
+    titleInput.addEventListener('input', saveDraft);
+    contentInput.addEventListener('input', saveDraft);
+    const timer = setInterval(saveDraft, 5000);
+
+    form.addEventListener('submit', function () {
+        clearInterval(timer);
+        try { localStorage.removeItem(draftKey); } catch (e) {}
+    });
+})();
+</script>
+
+{% else %}
 {{ form.media }}
 <style>
     .note-editor { border: none !important; }
@@ -113,4 +349,5 @@
     .note-placeholder { color: var(--text-sub) !important; }
     input[placeholder="제목을 입력하세요"]::placeholder { color: var(--border); }
 </style>
+{% endif %}
 {% endblock %}

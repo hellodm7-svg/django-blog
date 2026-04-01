@@ -4,12 +4,25 @@ from .models import Post, Comment
 
 
 class PostForm(forms.ModelForm):
+    def __init__(self, *args, use_simple_editor=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        if use_simple_editor:
+            self.fields['content'].widget = forms.Textarea(attrs={
+                'class': 'form-control memo-editor',
+                'rows': 20,
+                'placeholder': '내용을 입력하세요',
+                'autocomplete': 'off',
+                'autocapitalize': 'sentences',
+                'autocorrect': 'on',
+            })
+        else:
+            self.fields['content'].widget = SummernoteWidget()
+
     class Meta:
         model = Post
         fields = ['title', 'content', 'thumbnail', 'category', 'tags', 'is_published']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '제목을 입력하세요'}),
-            'content': SummernoteWidget(),
             'thumbnail': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'tags': forms.CheckboxSelectMultiple(),

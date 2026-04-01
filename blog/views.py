@@ -6,6 +6,12 @@ from .models import Post, Category, Tag, Comment
 from .forms import PostForm, CommentForm
 
 
+def _is_mobile_request(request):
+    user_agent = (request.META.get('HTTP_USER_AGENT') or '').lower()
+    mobile_tokens = ('iphone', 'android', 'mobile', 'ipad', 'ipod')
+    return any(token in user_agent for token in mobile_tokens)
+
+
 def post_list(request):
     posts = Post.objects.filter(is_published=True)
     query = request.GET.get('q')
@@ -56,8 +62,9 @@ def tag_posts(request, slug):
 
 @login_required
 def post_create(request):
+    use_simple_editor = _is_mobile_request(request)
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES, use_simple_editor=use_simple_editor)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -66,22 +73,37 @@ def post_create(request):
             messages.success(request, '게시글이 작성되었습니다.')
             return redirect(post.get_absolute_url())
     else:
-        form = PostForm()
-    return render(request, 'blog/post_form.html', {'form': form, 'action': '작성'})
+        form = PostForm(use_simple_editor=use_simple_editor)
+    return render(request, 'blog/post_form.html', {
+        'form': form,
+        'action': '작성',
+        'use_simple_editor': use_simple_editor,
+    })
 
 
 @login_required
 def post_edit(request, pk):
+    use_simple_editor = _is_mobile_request(request)
     post = get_object_or_404(Post, pk=pk, author=request.user)
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, instance=post)
+        form = PostForm(
+            request.POST,
+            request.FILES,
+            instance=post,
+            use_simple_editor=use_simple_editor,
+        )
         if form.is_valid():
             form.save()
             messages.success(request, '게시글이 수정되었습니다.')
             return redirect(post.get_absolute_url())
     else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/post_form.html', {'form': form, 'action': '수정', 'post': post})
+        form = PostForm(instance=post, use_simple_editor=use_simple_editor)
+    return render(request, 'blog/post_form.html', {
+        'form': form,
+        'action': '수정',
+        'post': post,
+        'use_simple_editor': use_simple_editor,
+    })
 
 
 @login_required
