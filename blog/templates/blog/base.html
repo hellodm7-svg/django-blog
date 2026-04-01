@@ -346,6 +346,161 @@
         .form-check-input { background-color: var(--surface2); border-color: var(--border); }
         .form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
         .form-check-label { color: var(--text-sub); }
+
+        /* ===== 모바일 최적화 ===== */
+        /* 버튼 최소 터치 영역 44px */
+        .btn-p, .btn-s {
+            min-height: 36px;
+        }
+        @media (max-width: 768px) {
+            .btn-p, .btn-s {
+                min-height: 44px;
+                padding: 10px 16px;
+                font-size: 0.88rem;
+            }
+
+            /* 게시글 아이템 모바일 */
+            .post-item {
+                padding: 14px 16px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .post-meta-text {
+                width: 100%;
+                margin-left: 28px;
+                margin-top: 2px;
+            }
+            .post-title-text {
+                font-size: 0.95rem;
+            }
+
+            /* 히어로 모바일 */
+            .hero-section {
+                padding: 28px 0 20px;
+            }
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            /* 본문 폰트 가독성 */
+            .post-content {
+                font-size: 1.05rem !important;
+                line-height: 1.95 !important;
+            }
+
+            /* 댓글 textarea 모바일 */
+            textarea[name="content"] {
+                font-size: 1rem !important;
+                min-height: 100px;
+            }
+
+            /* 사이드바 모바일에서 숨김 */
+            .col-lg-4 { display: none; }
+
+            /* 하단 탭바 공간 확보 */
+            body { padding-bottom: 68px; }
+            footer { margin-bottom: 68px; }
+        }
+
+        /* 하단 탭바 */
+        .mobile-tabbar {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-tabbar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 58px;
+                background: var(--surface);
+                border-top: 1px solid var(--border);
+                z-index: 200;
+                align-items: center;
+                justify-content: space-around;
+            }
+            .mobile-tabbar a,
+            .mobile-tabbar button {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                color: var(--text-sub);
+                text-decoration: none;
+                font-size: 0.6rem;
+                font-weight: 500;
+                background: none;
+                border: none;
+                padding: 0;
+                min-width: 48px;
+                min-height: 48px;
+                cursor: pointer;
+                transition: color 0.15s;
+            }
+            .mobile-tabbar a i,
+            .mobile-tabbar button i {
+                font-size: 1.35rem;
+            }
+            .mobile-tabbar a:hover,
+            .mobile-tabbar button:hover { color: var(--accent); }
+            .mobile-tabbar .tab-write {
+                background: var(--accent);
+                color: #0d1117;
+                border-radius: 50%;
+                width: 46px;
+                height: 46px;
+                min-width: 46px;
+                min-height: 46px;
+                font-size: 0 !important;
+                margin-bottom: 4px;
+            }
+            .mobile-tabbar .tab-write i {
+                font-size: 1.2rem;
+                color: #0d1117;
+            }
+
+            /* 모바일에서 상단 네브바 검색/버튼 숨김 */
+            .navbar form.d-flex,
+            .navbar .d-flex.align-items-center { display: none !important; }
+        }
+
+        /* 카테고리 가로 스크롤 pill (모바일) */
+        .cat-scroll-wrap {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .cat-scroll-wrap {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding: 12px 16px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                border-bottom: 1px solid var(--border);
+            }
+            .cat-scroll-wrap::-webkit-scrollbar { display: none; }
+            .cat-pill-btn {
+                flex-shrink: 0;
+                background: var(--surface2);
+                color: var(--text-sub);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                padding: 6px 14px;
+                font-size: 0.8rem;
+                font-weight: 500;
+                text-decoration: none;
+                white-space: nowrap;
+                transition: all 0.15s;
+            }
+            .cat-pill-btn.active,
+            .cat-pill-btn:hover {
+                background: var(--accent);
+                color: #0d1117;
+                border-color: var(--accent);
+            }
+        }
     </style>
 </head>
 <body>
@@ -414,5 +569,24 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% block extra_js %}{% endblock %}
+
+<!-- 모바일 하단 탭바 -->
+<div class="mobile-tabbar">
+    <a href="/"><i class="bi bi-house"></i>홈</a>
+    <a href="/?q=" id="tab-search-btn"><i class="bi bi-search"></i>검색</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'blog:post_create' %}" class="tab-write"><i class="bi bi-pencil"></i></a>
+    {% else %}
+    <a href="{% url 'login' %}" class="tab-write"><i class="bi bi-pencil"></i></a>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}" style="display:contents;">
+        {% csrf_token %}
+        <button type="submit"><i class="bi bi-box-arrow-right"></i>로그아웃</button>
+    </form>
+    {% else %}
+    <a href="{% url 'login' %}"><i class="bi bi-person"></i>로그인</a>
+    {% endif %}
+</div>
 </body>
 </html>
