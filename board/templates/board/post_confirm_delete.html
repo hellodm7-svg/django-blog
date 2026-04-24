@@ -1,0 +1,25 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}게시글 삭제 - 게시판{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width:500px;">
+    <div class="card-d p-4 text-center">
+        <i class="bi bi-trash" style="font-size:2.5rem; color:var(--danger);"></i>
+        <h5 style="color:var(--text); margin-top:16px; margin-bottom:8px;">게시글 삭제</h5>
+        <p style="color:var(--text-sub); font-size:0.88rem;">
+            <strong style="color:var(--text);">{{ post.title }}</strong><br>
+            이 게시글을 삭제할까요? 되돌릴 수 없습니다.
+        </p>
+        <div class="d-flex gap-2 justify-content-center mt-4">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-p" style="background:var(--danger);">
+                    <i class="bi bi-trash"></i>삭제
+                </button>
+            </form>
+            <a href="{{ post.get_absolute_url }}" class="btn-s">취소</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

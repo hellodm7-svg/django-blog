@@ -513,6 +513,7 @@
         <div class="collapse navbar-collapse" id="navMenu">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="/">홈</a></li>
+                <li class="nav-item"><a class="nav-link" href="/board/">게시판</a></li>
             </ul>
             <form class="d-flex me-3" method="get" action="/">
                 <input class="inp me-2" type="search" name="q" placeholder="검색..." value="{{ request.GET.q }}" style="width:170px;">
@@ -542,6 +543,7 @@
                     </div>
                 {% else %}
                     <a class="btn-s" href="{% url 'login' %}">로그인</a>
+                    <a class="btn-p" href="{% url 'signup' %}">회원가입</a>
                 {% endif %}
             </div>
         </div>
@@ -573,9 +575,9 @@
 <!-- 모바일 하단 탭바 -->
 <div class="mobile-tabbar">
     <a href="/"><i class="bi bi-house"></i>홈</a>
-    <a href="/?q=" id="tab-search-btn"><i class="bi bi-search"></i>검색</a>
+    <a href="/board/"><i class="bi bi-chat-square-text"></i>게시판</a>
     {% if user.is_authenticated %}
-    <a href="{% url 'blog:post_create' %}" class="tab-write"><i class="bi bi-pencil"></i></a>
+    <a href="{% url 'board:post_create' %}" class="tab-write"><i class="bi bi-pencil"></i></a>
     {% else %}
     <a href="{% url 'login' %}" class="tab-write"><i class="bi bi-pencil"></i></a>
     {% endif %}

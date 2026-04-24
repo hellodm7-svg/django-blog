@@ -95,7 +95,7 @@ class SiteSettings(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='게시글')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='작성자')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_comments', verbose_name='작성자')
     content = models.TextField(verbose_name='내용')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='작성일')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='수정일')
